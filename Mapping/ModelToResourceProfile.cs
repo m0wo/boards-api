@@ -10,6 +10,7 @@ namespace Boards.API.Mapping
         {
             CreateMap<Board, BoardResource>();
             CreateMap<Post, PostResource>();
+            CreateMap<Reply, ReplyResource>();
         }
     }
 }

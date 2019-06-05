@@ -49,6 +49,18 @@ namespace Boards.API.Persistence.Contexts
                 new Post { Id = 101, Title = "Add auth lol", Body = "u gotta...", BoardId = 101 },
                 new Post { Id = 102, Title = "funny cat instagram", Body = "ha ha ha", BoardId = 102 }
             );
+
+            builder.Entity<Reply>().ToTable("Replies");
+            builder.Entity<Reply>().HasKey(r => r.Id);
+            builder.Entity<Reply>().HasOne(r => r.Post).WithMany(p => p.Replies).HasForeignKey(r => r.PostId);
+            builder.Entity<Reply>().Property(r => r.Id).IsRequired().ValueGeneratedOnAdd().HasValueGenerator<InMemoryIntegerValueGenerator<int>>();
+            builder.Entity<Reply>().Property(r => r.CreatedAt).IsRequired().ValueGeneratedOnAdd().ValueGeneratedOnAdd();
+            builder.Entity<Reply>().Property(p => p.Body).IsRequired().HasMaxLength(2000);
+
+            builder.Entity<Reply>().HasData
+            (
+                new Reply { Id = 100, Body = "Very nice indeed.", PostId = 102 }
+            );
         }
     }
 }

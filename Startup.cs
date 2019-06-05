@@ -41,10 +41,12 @@ namespace Boards.API
 
             services.AddScoped<IBoardRepository, BoardRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<IReplyRepository, ReplyRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IBoardService, BoardService>();
             services.AddScoped<IPostService, PostService>();
+            services.AddScoped<IReplyService, ReplyService>();
 
             //TODO: switch deprecated call to updated way.
             services.AddAutoMapper();
