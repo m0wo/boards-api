@@ -27,7 +27,6 @@ namespace Boards.API.Persistence.Contexts
             builder.Entity<Board>().Property(p => p.CreatedAt).IsRequired().ValueGeneratedOnAdd().ValueGeneratedOnAdd();
             builder.Entity<Board>().Property(p => p.Name).IsRequired().HasMaxLength(30);
             builder.Entity<Board>().Property(p => p.Description).HasMaxLength(500);
-            builder.Entity<Board>().HasMany(p => p.Posts).WithOne(p => p.Board).HasForeignKey(p => p.BoardId);
 
             builder.Entity<Board>().HasData
             (
@@ -36,6 +35,20 @@ namespace Boards.API.Persistence.Contexts
                 new Board { Id = 102, Name = "Funny" }
             );
 
+            builder.Entity<Post>().ToTable("Posts");
+            builder.Entity<Post>().HasKey(p => p.Id);
+            builder.Entity<Post>().HasOne(p => p.Board).WithMany(b => b.Posts).HasForeignKey(p => p.BoardId);
+            builder.Entity<Post>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd().HasValueGenerator<InMemoryIntegerValueGenerator<int>>();
+            builder.Entity<Post>().Property(p => p.CreatedAt).IsRequired().ValueGeneratedOnAdd().ValueGeneratedOnAdd();
+            builder.Entity<Post>().Property(p => p.Title).IsRequired().HasMaxLength(300);
+            builder.Entity<Post>().Property(p => p.Body).HasMaxLength(2000);
+            
+            builder.Entity<Post>().HasData
+            (
+                new Post { Id = 100, Title = "Hello World", Body = "This is a test post!", BoardId = 100 },
+                new Post { Id = 101, Title = "Add auth lol", Body = "u gotta...", BoardId = 101 },
+                new Post { Id = 102, Title = "funny cat instagram", Body = "ha ha ha", BoardId = 102 }
+            );
         }
     }
 }

@@ -9,6 +9,7 @@ namespace Boards.API.Mapping
         public ResourceToModelProfile()
         {
             CreateMap<SaveBoardResource, Board>();
+            CreateMap<SavePostResource, Post>();
         }
     }
 }

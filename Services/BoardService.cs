@@ -23,7 +23,7 @@ namespace Boards.API.Services
         {
             var existingBoard = await _boardRepository.FindByIdAsync(id);
             if (existingBoard == null)
-                return new BoardResponse(existingBoard);
+                return new BoardResponse("Board not found");
 
             try
             {

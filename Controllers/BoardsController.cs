@@ -23,7 +23,7 @@ namespace Boards.API.Controllers
             _mapper = mapper;
         }
 
-                [HttpGet]
+        [HttpGet]
         public async Task<IEnumerable<BoardResource>> ListAsync()
         {
             var boards = await _boardService.ListAsync();
@@ -72,9 +72,8 @@ namespace Boards.API.Controllers
              if (!result.Success)
                 return BadRequest(result.Message);
 
-            var categoryResource = _mapper.Map<Board, BoardResource>(result.Board);
-            return Ok(categoryResource);
+            var boardResource = _mapper.Map<Board, BoardResource>(result.Board);
+            return Ok(boardResource);
         }
-
     }
 }

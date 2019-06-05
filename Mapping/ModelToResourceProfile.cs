@@ -9,6 +9,7 @@ namespace Boards.API.Mapping
         public ModelToResourceProfile()
         {
             CreateMap<Board, BoardResource>();
+            CreateMap<Post, PostResource>();
         }
     }
 }

@@ -36,13 +36,16 @@ namespace Boards.API
 
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseInMemoryDatabase("supermarket-api-in-memory");
+                options.UseInMemoryDatabase("forum-api-in-memory");
             });
 
             services.AddScoped<IBoardRepository, BoardRepository>();
+            services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IBoardService, BoardService>();
+            services.AddScoped<IPostService, PostService>();
+
             //TODO: switch deprecated call to updated way.
             services.AddAutoMapper();
 
