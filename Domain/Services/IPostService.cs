@@ -7,6 +7,7 @@ namespace Boards.API.Domain.Services
 {
     public interface IPostService
     {
+       Task<Post> FindAsync(int id);
        Task<IEnumerable<Post>> ListAsync(); 
        Task<PostResponse> SaveAsync(Post post);
        Task<PostResponse> UpdateAsync(int id, Post post);

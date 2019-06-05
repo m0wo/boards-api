@@ -38,6 +38,11 @@ namespace Boards.API.Services
             }
         }
 
+        public async Task<Board> FindAsync(int id)
+        {
+            return await _boardRepository.FindByIdAsync(id); 
+        }
+
         public async Task<IEnumerable<Board>> ListAsync()
         {
             return await _boardRepository.ListAsync();

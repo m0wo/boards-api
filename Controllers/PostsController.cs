@@ -30,6 +30,14 @@ namespace Boards.API.Controllers
             return resources;
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> FindAsync(int id)
+        {
+            var result = await _postService.FindAsync(id);
+            var resource = _mapper.Map<Post, PostResource>(result);
+            return Ok(resource);
+        }
+
         [HttpPost]
         public async Task<IActionResult> PostAsync([FromBody] SavePostResource resource)
         {

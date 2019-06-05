@@ -37,6 +37,11 @@ namespace Boards.API.Services
             }
         }
 
+        public async Task<Reply> FindAsync(int id)
+        {
+            return await _replyRepository.FindByIdAsync(id);
+        }
+
         public async Task<IEnumerable<Reply>> ListAsync()
         {
             return await _replyRepository.ListAsync();
