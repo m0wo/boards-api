@@ -7,6 +7,7 @@ namespace Boards.API.Persistence.Contexts
 {
     public class AppDbContext : DbContext
     {
+        public DbSet<User> Users { get; set; }
         public DbSet<Board> Boards { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Reply> Replies { get; set; }
@@ -23,7 +24,6 @@ namespace Boards.API.Persistence.Contexts
             builder.Entity<Board>().ToTable("Boards");
             builder.Entity<Board>().HasKey(p => p.Id);
             builder.Entity<Board>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd().HasValueGenerator<InMemoryIntegerValueGenerator<int>>();
-            //TODO: I assume this is smart enough to use the current epoch ? we'll find out when testing.
             builder.Entity<Board>().Property(p => p.CreatedAt).IsRequired().ValueGeneratedOnAdd().ValueGeneratedOnAdd();
             builder.Entity<Board>().Property(p => p.Name).IsRequired().HasMaxLength(30);
             builder.Entity<Board>().Property(p => p.Description).HasMaxLength(500);

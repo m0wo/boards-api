@@ -11,6 +11,7 @@ namespace Boards.API.Mapping
             CreateMap<SaveBoardResource, Board>();
             CreateMap<SavePostResource, Post>();
             CreateMap<SaveReplyResource, Reply>();
+            CreateMap<UserCredentialResource, User>();
         }
     }
 }

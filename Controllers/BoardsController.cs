@@ -7,6 +7,7 @@ using Boards.API.Domain.Models;
 using Boards.API.Domain.Services;
 using Boards.API.Extensions;
 using Boards.API.Resources;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Boards.API.Controllers
@@ -26,6 +27,7 @@ namespace Boards.API.Controllers
         [HttpGet]
         public async Task<IEnumerable<BoardResource>> ListAsync()
         {
+            var user = HttpContext.User.Identity;
             var boards = await _boardService.ListAsync();
             var resources = _mapper.Map<IEnumerable<Board>, IEnumerable<BoardResource>>(boards);
 

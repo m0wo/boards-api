@@ -4,19 +4,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Boards.API.Domain.Repositories;
+using Boards.API.Domain.Security.Hashing;
+using Boards.API.Domain.Security.Tokens;
 using Boards.API.Domain.Services;
 using Boards.API.Persistence.Contexts;
 using Boards.API.Persistence.Repositories;
+using Boards.API.Security.Hashing;
+using Boards.API.Security.Tokens;
 using Boards.API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Boards.API
 {
@@ -39,14 +41,42 @@ namespace Boards.API
                 options.UseInMemoryDatabase("forum-api-in-memory");
             });
 
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IBoardRepository, BoardRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IReplyRepository, ReplyRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            services.AddSingleton<IPasswordHasher, PasswordHasher>();
+            services.AddSingleton<ITokenHandler, TokenHandler>();
+
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IBoardService, BoardService>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<IReplyService, ReplyService>();
+
+
+            services.Configure<TokenOptions>(Configuration.GetSection("TokenOptions"));
+            var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
+
+            var signingConfigurations = new SigningConfigurations();
+            services.AddSingleton(signingConfigurations);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(jwtBearerOptions =>
+                {
+                    jwtBearerOptions.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                    {
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = tokenOptions.Issuer,
+                        ValidAudience = tokenOptions.Audience,
+                        IssuerSigningKey = signingConfigurations.Key,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
 
             //TODO: switch deprecated call to updated way.
             services.AddAutoMapper();
@@ -67,6 +97,7 @@ namespace Boards.API
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseMvc();
         }
     }
