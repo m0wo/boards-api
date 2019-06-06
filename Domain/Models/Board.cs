@@ -10,5 +10,8 @@ namespace Boards.API.Domain.Models
         public string Description { get; set; }
         public DateTime CreatedAt { get; set; }
         public IList<Post> Posts { get; set; } = new List<Post>();
+
+        public int OwnerId { get; set; }
+        public User Owner { get; set; }
     }
 }

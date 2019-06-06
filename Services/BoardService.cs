@@ -5,6 +5,7 @@ using Boards.API.Domain.Models;
 using Boards.API.Domain.Repositories;
 using Boards.API.Domain.Services;
 using Boards.API.Domain.Services.Communication;
+using Boards.API.Extensions;
 
 namespace Boards.API.Services
 {
@@ -19,11 +20,14 @@ namespace Boards.API.Services
            _unitOfWork = unitOfWork; 
         }
 
-        public async Task<BoardResponse> DeleteAsync(int id)
+        public async Task<BoardResponse> DeleteAsync(int id, User user)
         {
             var existingBoard = await _boardRepository.FindByIdAsync(id);
             if (existingBoard == null)
                 return new BoardResponse("Board not found");
+
+            if(!user.IsBoardEditable(existingBoard))
+                return new BoardResponse("Invalid permissions");
 
             try
             {
@@ -48,10 +52,13 @@ namespace Boards.API.Services
             return await _boardRepository.ListAsync();
         }
 
-        public async Task<BoardResponse> SaveAsync(Board board)
+        public async Task<BoardResponse> SaveAsync(Board board, User user)
         {
             try
             {
+                board.Owner = user;
+                board.OwnerId = user.Id;
+
                 await _boardRepository.AddAsync(board);
                 await _unitOfWork.CompleteAsync();
 
@@ -63,11 +70,14 @@ namespace Boards.API.Services
             }
         }
 
-        public async Task<BoardResponse> UpdateAsync(int id, Board board)
+        public async Task<BoardResponse> UpdateAsync(int id, Board board, User user)
         {
             var existingBoard = await _boardRepository.FindByIdAsync(id);
             if (existingBoard == null)
                 return new BoardResponse("Board not found.");
+            
+            if(!user.IsBoardEditable(board))
+                return new BoardResponse("Invalid permissions");
             
             existingBoard.Name = board.Name;
             existingBoard.Description = board.Description;

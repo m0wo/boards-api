@@ -15,11 +15,13 @@ namespace Boards.API.Controllers
     [Route("/api/[controller]")]
     public class BoardsController : Controller
     {
+        private readonly IUserService _userService;
         private readonly IBoardService _boardService;
         private readonly IMapper _mapper;
 
-        public BoardsController(IBoardService boardService, IMapper mapper)
+        public BoardsController(IUserService userService, IBoardService boardService, IMapper mapper)
         {
+            _userService = userService;
             _boardService = boardService;
             _mapper = mapper;
         }
@@ -27,7 +29,6 @@ namespace Boards.API.Controllers
         [HttpGet]
         public async Task<IEnumerable<BoardResource>> ListAsync()
         {
-            var user = HttpContext.User.Identity;
             var boards = await _boardService.ListAsync();
             var resources = _mapper.Map<IEnumerable<Board>, IEnumerable<BoardResource>>(boards);
 
@@ -43,13 +44,17 @@ namespace Boards.API.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> PostAsync([FromBody] SaveBoardResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
 
+            var email = HttpContext.User.Identity.Name;
             var board = _mapper.Map<SaveBoardResource, Board>(resource);
-            var result = await _boardService.SaveAsync(board);
+
+            var user = await _userService.FindByEmailAsync(email);
+            var result = await _boardService.SaveAsync(board, user);
 
             if (!result.Success)
                 return BadRequest(result.Message);
@@ -64,8 +69,11 @@ namespace Boards.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
 
+            var email = HttpContext.User.Identity.Name;
             var board = _mapper.Map<SaveBoardResource, Board>(resource);
-            var result = await _boardService.UpdateAsync(id, board);
+
+            var user = await _userService.FindByEmailAsync(email);
+            var result = await _boardService.UpdateAsync(id, board, user);
 
             if (!result.Success)
                 return BadRequest(result.Message);
@@ -77,7 +85,10 @@ namespace Boards.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var result = await _boardService.DeleteAsync(id);
+            var email = HttpContext.User.Identity.Name;
+            var user = await _userService.FindByEmailAsync(email);
+
+            var result = await _boardService.DeleteAsync(id, user);
 
              if (!result.Success)
                 return BadRequest(result.Message);
