@@ -7,5 +7,7 @@ namespace Boards.API.Domain.Repositories
     {
         Task AddAsync(User user);
         Task<User> FindByEmailAsync(string email);
+        void Update(User user);
+        void Remove(User user);
     }
 }

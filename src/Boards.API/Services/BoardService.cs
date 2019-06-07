@@ -26,7 +26,7 @@ namespace Boards.API.Services
             if (existingBoard == null)
                 return new BoardResponse("Board not found");
 
-            if(!user.IsBoardEditable(existingBoard))
+            if(!user.IsItemEditable(existingBoard))
                 return new BoardResponse("Invalid permissions");
 
             try
@@ -76,7 +76,7 @@ namespace Boards.API.Services
             if (existingBoard == null)
                 return new BoardResponse("Board not found.");
             
-            if(!user.IsBoardEditable(board))
+            if(!user.IsItemEditable(board))
                 return new BoardResponse("Invalid permissions");
             
             existingBoard.Name = board.Name;

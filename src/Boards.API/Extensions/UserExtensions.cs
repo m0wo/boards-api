@@ -4,11 +4,11 @@ namespace Boards.API.Extensions
 {
     public static class UserExtensions
     {
-        public static bool IsBoardEditable(this User user, Board board)
+        public static bool IsItemEditable(this User user, ForumItem item)
         {
             if(user == null)
                 return false;
-            return user.Id == board.OwnerId;
+            return user.Id == item.OwnerId;
         }
     }
 

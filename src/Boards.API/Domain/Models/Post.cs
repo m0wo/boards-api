@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace Boards.API.Domain.Models
 {
-    public class Post
+    public class Post : ForumItem
     {
-        public int Id { get; set; }
         public string Title { get; set; }
         public string Body { get; set; }
         public DateTime CreatedAt { get; set; }

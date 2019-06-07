@@ -5,6 +5,7 @@ using Boards.API.Domain.Models;
 using Boards.API.Domain.Repositories;
 using Boards.API.Domain.Services;
 using Boards.API.Domain.Services.Communication;
+using Boards.API.Extensions;
 
 namespace Boards.API.Services
 {
@@ -19,11 +20,14 @@ namespace Boards.API.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<PostResponse> DeleteAsync(int id)
+        public async Task<PostResponse> DeleteAsync(int id, User user)
         {
             var existingPost = await _postRepository.FindByIdAsync(id);
             if (existingPost == null)
                 return new PostResponse("Post not found");
+            
+            if(!user.IsItemEditable(existingPost))
+                return new PostResponse("Invalid permissions");
             try
             {
                 _postRepository.Remove(existingPost);
@@ -46,14 +50,16 @@ namespace Boards.API.Services
             return await _postRepository.ListAsync();
         }
 
-        public async Task<PostResponse> SaveAsync(Post post)
+        public async Task<PostResponse> SaveAsync(Post post, User user)
         {
             try
             {
-               await _postRepository.AddAsync(post); 
-               await _unitOfWork.CompleteAsync();
+                post.Owner = user;
+                post.OwnerId = user.Id;
+                await _postRepository.AddAsync(post); 
+                await _unitOfWork.CompleteAsync();
 
-               return new PostResponse(post);
+                return new PostResponse(post);
             }
             catch (Exception ex)
             {
@@ -62,11 +68,14 @@ namespace Boards.API.Services
             }
         }
 
-        public async Task<PostResponse> UpdateAsync(int id, Post post)
+        public async Task<PostResponse> UpdateAsync(int id, Post post, User user)
         {
             var existingPost = await _postRepository.FindByIdAsync(id);
             if (existingPost == null)
                 return new PostResponse("Post not found");
+
+            if(!user.IsItemEditable(post))
+                return new PostResponse("Invalid permissions");
 
             existingPost.Title = post.Title;
             existingPost.Body = post.Body;

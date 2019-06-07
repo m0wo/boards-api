@@ -12,11 +12,13 @@ namespace Boards.API.Controllers
     [Route("/api/[controller]")]
     public class PostsController : Controller
     {
+        private readonly IUserService _userService;
         private readonly IPostService _postService;
         private readonly IMapper _mapper;
 
-        public PostsController(IPostService postService, IMapper mapper)
+        public PostsController(IUserService userService, IPostService postService, IMapper mapper)
         {
+            _userService = userService;
             _postService = postService;
             _mapper = mapper;
         }
@@ -44,8 +46,11 @@ namespace Boards.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
 
+            var email = HttpContext.User.Identity.Name;
+            var user = await _userService.FindByEmailAsync(email);
+
             var post = _mapper.Map<SavePostResource, Post>(resource);
-            var result = await _postService.SaveAsync(post);
+            var result = await _postService.SaveAsync(post, user);
 
             if (!result.Success)
                 return BadRequest(result.Message);
@@ -60,8 +65,11 @@ namespace Boards.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
 
+            var email = HttpContext.User.Identity.Name;
+            var user = await _userService.FindByEmailAsync(email);
+
             var post = _mapper.Map<SavePostResource, Post>(resource);
-            var result = await _postService.UpdateAsync(id, post);
+            var result = await _postService.UpdateAsync(id, post, user);
 
             if (!result.Success)
                 return BadRequest(result.Message);
@@ -73,7 +81,10 @@ namespace Boards.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var result = await _postService.DeleteAsync(id);
+            var email = HttpContext.User.Identity.Name;
+            var user = await _userService.FindByEmailAsync(email);
+
+            var result = await _postService.DeleteAsync(id, user);
 
             if (!result.Success)
                 return BadRequest(result.Message);

@@ -9,9 +9,8 @@ namespace Boards.API.Domain.Services
     {
        Task<Reply> FindAsync(int id);
        Task<IEnumerable<Reply>> ListAsync();
-       Task<ReplyResponse> SaveAsync(Reply reply);
-       Task<ReplyResponse> UpdateAsync(int id, Reply reply);
-       Task<ReplyResponse> DeleteAsync(int id);
-
+       Task<ReplyResponse> SaveAsync(Reply reply, User user);
+       Task<ReplyResponse> UpdateAsync(int id, Reply reply, User user);
+       Task<ReplyResponse> DeleteAsync(int id, User user);
     }
 }

@@ -22,5 +22,15 @@ namespace Boards.API.Persistence.Repositories
         {
             return await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
         }
+
+        public void Remove(User user)
+        {
+            _context.Users.Remove(user);
+        }
+
+        public void Update(User user)
+        {
+            _context.Users.Update(user);
+        }
     }
 }

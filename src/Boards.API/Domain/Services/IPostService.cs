@@ -9,8 +9,8 @@ namespace Boards.API.Domain.Services
     {
        Task<Post> FindAsync(int id);
        Task<IEnumerable<Post>> ListAsync(); 
-       Task<PostResponse> SaveAsync(Post post);
-       Task<PostResponse> UpdateAsync(int id, Post post);
-       Task<PostResponse> DeleteAsync(int id);
+       Task<PostResponse> SaveAsync(Post post, User user);
+       Task<PostResponse> UpdateAsync(int id, Post post, User user);
+       Task<PostResponse> DeleteAsync(int id, User user);
     }
 }
