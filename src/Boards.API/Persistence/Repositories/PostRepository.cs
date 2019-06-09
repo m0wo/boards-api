@@ -18,9 +18,9 @@ namespace Boards.API.Persistence.Repositories
             await _context.Posts.AddAsync(post);
         }
 
-        public async Task<Post> FindByIdAsync(int id)
+        public async Task<Post> FindByIdAsync(int postId)
         {
-            return await _context.Posts.FindAsync(id);
+            return await _context.Posts.FindAsync(postId);
         }
 
         public async Task<IEnumerable<Post>> ListAsync()

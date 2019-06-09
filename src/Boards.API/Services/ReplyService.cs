@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Boards.API.Domain.Models;
 using Boards.API.Domain.Repositories;
@@ -20,9 +21,9 @@ namespace Boards.API.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ReplyResponse> DeleteAsync(int id, User user)
+        public async Task<ReplyResponse> DeleteAsync(int replyId, User user)
         {
-            var existingReply = await _replyRepository.FindByIdAsync(id);
+            var existingReply = await _replyRepository.FindByIdAsync(replyId);
             if(existingReply == null)
                 return new ReplyResponse("Reply not found");
             
@@ -41,22 +42,24 @@ namespace Boards.API.Services
             }
         }
 
-        public async Task<Reply> FindAsync(int id)
+        public async Task<Reply> FindAsync(int replyId)
         {
-            return await _replyRepository.FindByIdAsync(id);
+            return await _replyRepository.FindByIdAsync(replyId);
         }
 
-        public async Task<IEnumerable<Reply>> ListAsync()
+        public async Task<IEnumerable<Reply>> ListAsync(int postId)
         {
-            return await _replyRepository.ListAsync();
+            IEnumerable<Reply> replyList = await _replyRepository.ListAsync();
+            return replyList.Where(r => r.PostId == postId);
         }
 
-        public async Task<ReplyResponse> SaveAsync(Reply reply, User user)
+        public async Task<ReplyResponse> SaveAsync(int postId, Reply reply, User user)
         {
             try
             {
                 reply.Owner = user;
                 reply.OwnerId = user.Id;
+                reply.PostId = postId;
                 await _replyRepository.AddAsync(reply);
                 await _unitOfWork.CompleteAsync();
                 return new ReplyResponse(reply);
@@ -68,9 +71,9 @@ namespace Boards.API.Services
             
         }
 
-        public async Task<ReplyResponse> UpdateAsync(int id, Reply reply, User user)
+        public async Task<ReplyResponse> UpdateAsync(int replyId, Reply reply, User user)
         {
-            var existingReply = await _replyRepository.FindByIdAsync(id);
+            var existingReply = await _replyRepository.FindByIdAsync(replyId);
             if(existingReply == null)
                 return new ReplyResponse("Reply not found");
             

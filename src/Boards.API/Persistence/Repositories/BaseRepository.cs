@@ -1,3 +1,4 @@
+using Boards.API.Domain.Repositories;
 using Boards.API.Persistence.Contexts;
 
 namespace Boards.API.Persistence.Repositories

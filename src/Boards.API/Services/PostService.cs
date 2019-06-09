@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Boards.API.Domain.Models;
 using Boards.API.Domain.Repositories;
@@ -12,17 +13,19 @@ namespace Boards.API.Services
     public class PostService : IPostService
     {
         private readonly IPostRepository _postRepository;
+        private readonly IBoardRepository _boardRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public PostService(IPostRepository postRepository, IUnitOfWork unitOfWork)
+        public PostService(IBoardRepository boardRepository, IPostRepository postRepository, IUnitOfWork unitOfWork)
         {
+            _boardRepository = boardRepository;
             _postRepository = postRepository;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<PostResponse> DeleteAsync(int id, User user)
-        {
-            var existingPost = await _postRepository.FindByIdAsync(id);
+        public async Task<PostResponse> DeleteAsync(int postId, User user)
+        {   
+            var existingPost = await _postRepository.FindByIdAsync(postId);
             if (existingPost == null)
                 return new PostResponse("Post not found");
             
@@ -40,22 +43,24 @@ namespace Boards.API.Services
             }
         }
 
-        public async Task<Post> FindAsync(int id)
+        public async Task<Post> FindAsync(int postId)
         {
-            return await _postRepository.FindByIdAsync(id);
+            return await _postRepository.FindByIdAsync(postId);
         }
 
-        public async Task<IEnumerable<Post>> ListAsync()
+        public async Task<IEnumerable<Post>> ListAsync(int boardId)
         {
-            return await _postRepository.ListAsync();
+            IEnumerable<Post> postList = await _postRepository.ListAsync();
+            return postList.Where(p => p.BoardId == boardId);
         }
 
-        public async Task<PostResponse> SaveAsync(Post post, User user)
+        public async Task<PostResponse> SaveAsync(int boardId, Post post, User user)
         {
             try
             {
                 post.Owner = user;
                 post.OwnerId = user.Id;
+                post.BoardId = boardId;
                 await _postRepository.AddAsync(post); 
                 await _unitOfWork.CompleteAsync();
 
@@ -68,9 +73,9 @@ namespace Boards.API.Services
             }
         }
 
-        public async Task<PostResponse> UpdateAsync(int id, Post post, User user)
+        public async Task<PostResponse> UpdateAsync(int postId, Post post, User user)
         {
-            var existingPost = await _postRepository.FindByIdAsync(id);
+            var existingPost = await _postRepository.FindByIdAsync(postId);
             if (existingPost == null)
                 return new PostResponse("Post not found");
 

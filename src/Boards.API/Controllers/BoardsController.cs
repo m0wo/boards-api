@@ -17,12 +17,17 @@ namespace Boards.API.Controllers
     {
         private readonly IUserService _userService;
         private readonly IBoardService _boardService;
+        private readonly IPostService _postService;
+        private readonly IReplyService _replyService;
         private readonly IMapper _mapper;
 
-        public BoardsController(IUserService userService, IBoardService boardService, IMapper mapper)
+        public BoardsController(IUserService userService, IBoardService boardService, 
+            IPostService postService, IReplyService replyService, IMapper mapper)
         {
             _userService = userService;
             _boardService = boardService;
+            _postService = postService;
+            _replyService = replyService;
             _mapper = mapper;
         }
 

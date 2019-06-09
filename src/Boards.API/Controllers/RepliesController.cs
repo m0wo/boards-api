@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Boards.API.Controllers
 {
-    [Route("/api/[controller]")]
     public class RepliesController : Controller
     {
         private readonly IUserService _userService;
@@ -24,24 +23,27 @@ namespace Boards.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ReplyResource>> ListAsync()
+        [Route("/api/posts/{postId:int}/replies")]
+        public async Task<IEnumerable<ReplyResource>> GetRepliesForPost([FromRoute] int postId)
         {
-            var replies = await _replyService.ListAsync();
+            var replies = await _replyService.ListAsync(postId);
             var resources = _mapper.Map<IEnumerable<Reply>, IEnumerable<ReplyResource>>(replies);
 
             return resources;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> FindAsync(int id)
+        [HttpGet]
+        [Route("/api/replies/{replyId:int}")]
+        public async Task<IActionResult> FindAsync([FromRoute] int replyId)
         {
-            var result = await _replyService.FindAsync(id);
+            var result = await _replyService.FindAsync(replyId);
             var resource = _mapper.Map<Reply, ReplyResource>(result);
             return Ok(resource);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] SaveReplyResource resource)
+        [Route("/api/posts/{postId:int}/replies")]
+        public async Task<IActionResult> PostAsync([FromRoute] int postId, [FromBody] SaveReplyResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
@@ -50,7 +52,7 @@ namespace Boards.API.Controllers
             var user = await _userService.FindByEmailAsync(email);
 
             var reply = _mapper.Map<SaveReplyResource, Reply>(resource);
-            var result = await _replyService.SaveAsync(reply, user);
+            var result = await _replyService.SaveAsync(postId, reply, user);
 
             if (!result.Success)
                 return BadRequest(result.Message);
@@ -59,8 +61,9 @@ namespace Boards.API.Controllers
             return Ok(replyResource);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] SaveReplyResource resource)
+        [HttpPut("{replyId}")]
+        [Route("/api/replies/{replyId:int}")]
+        public async Task<IActionResult> PutAsync([FromRoute] int replyId, [FromBody] SaveReplyResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
@@ -69,7 +72,7 @@ namespace Boards.API.Controllers
             var user = await _userService.FindByEmailAsync(email);
 
             var reply = _mapper.Map<SaveReplyResource, Reply>(resource);
-            var result = await _replyService.UpdateAsync(id, reply, user);
+            var result = await _replyService.UpdateAsync(replyId, reply, user);
 
             if (!result.Success)
                 return BadRequest(result.Message);
@@ -78,13 +81,14 @@ namespace Boards.API.Controllers
             return Ok(replyResource);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        [HttpDelete("{replyId}")]
+        [Route("/api/replies/{replyId:int}")]
+        public async Task<IActionResult> DeleteAsync([FromRoute] int replyId)
         {
             var email = HttpContext.User.Identity.Name;
             var user = await _userService.FindByEmailAsync(email);
 
-            var result = await _replyService.DeleteAsync(id, user);
+            var result = await _replyService.DeleteAsync(replyId, user);
 
             if (!result.Success)
                 return BadRequest(result.Message);

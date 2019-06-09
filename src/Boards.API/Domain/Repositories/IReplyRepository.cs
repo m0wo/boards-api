@@ -8,7 +8,7 @@ namespace Boards.API.Domain.Repositories
     {
         Task<IEnumerable<Reply>> ListAsync();
         Task AddAsync(Reply reply);
-        Task<Reply> FindByIdAsync(int id);
+        Task<Reply> FindByIdAsync(int replyId);
         void Update(Reply reply);
         void Remove(Reply reply);
     }
