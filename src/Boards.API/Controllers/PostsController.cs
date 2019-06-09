@@ -9,39 +9,44 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Boards.API.Controllers
 {
-    [Route("/api/[controller]")]
+    
     public class PostsController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IBoardService _boardService;
         private readonly IPostService _postService;
         private readonly IMapper _mapper;
 
-        public PostsController(IUserService userService, IPostService postService, IMapper mapper)
+        public PostsController(IBoardService boardService, IUserService userService, IPostService postService, IMapper mapper)
         {
+            _boardService = boardService;
             _userService = userService;
             _postService = postService;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<PostResource>> ListAsync()
+        [Route("/api/boards/{boardId:int}/posts")]
+        public async Task<IEnumerable<PostResource>> getPostsForBoard([FromRoute] int boardId)
         {
-            var posts = await _postService.ListAsync();
+            var posts = await _postService.ListAsync(boardId);
             var resources = _mapper.Map<IEnumerable<Post>, IEnumerable<PostResource>>(posts);
 
             return resources;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> FindAsync(int id)
+        [HttpGet]
+        [Route("/api/posts/{postId:int}")]
+        public async Task<IActionResult> getBoardPostById([FromRoute] int postId)
         {
-            var result = await _postService.FindAsync(id);
+            var result = await _postService.FindAsync(postId);
             var resource = _mapper.Map<Post, PostResource>(result);
             return Ok(resource);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] SavePostResource resource)
+        [Route("/api/boards/{boardId:int}/posts")]
+        public async Task<IActionResult> PostAsync([FromRoute] int boardId, [FromBody] SavePostResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
@@ -50,7 +55,7 @@ namespace Boards.API.Controllers
             var user = await _userService.FindByEmailAsync(email);
 
             var post = _mapper.Map<SavePostResource, Post>(resource);
-            var result = await _postService.SaveAsync(post, user);
+            var result = await _postService.SaveAsync(boardId, post, user);
 
             if (!result.Success)
                 return BadRequest(result.Message);
@@ -59,8 +64,9 @@ namespace Boards.API.Controllers
             return Ok(postResource);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] SavePostResource resource)
+        [HttpPut]
+        [Route("/api/posts/{postId:int}")]
+        public async Task<IActionResult> PutAsync([FromRoute] int boardId, [FromRoute] int postId, [FromBody] SavePostResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
@@ -69,7 +75,7 @@ namespace Boards.API.Controllers
             var user = await _userService.FindByEmailAsync(email);
 
             var post = _mapper.Map<SavePostResource, Post>(resource);
-            var result = await _postService.UpdateAsync(id, post, user);
+            var result = await _postService.UpdateAsync(postId, post, user);
 
             if (!result.Success)
                 return BadRequest(result.Message);
@@ -78,13 +84,14 @@ namespace Boards.API.Controllers
             return Ok(postResource);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        [HttpDelete]
+        [Route("/api/posts/{postId:int}")]
+        public async Task<IActionResult> DeleteAsync([FromRoute] int boardId, [FromRoute] int postId)
         {
             var email = HttpContext.User.Identity.Name;
             var user = await _userService.FindByEmailAsync(email);
 
-            var result = await _postService.DeleteAsync(id, user);
+            var result = await _postService.DeleteAsync(postId, user);
 
             if (!result.Success)
                 return BadRequest(result.Message);

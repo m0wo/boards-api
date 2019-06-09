@@ -1,7 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.InMemory.ValueGeneration.Internal;
 using Boards.API.Domain.Models;
+using System;
 
 namespace Boards.API.Persistence.Contexts
 {
@@ -17,50 +17,42 @@ namespace Boards.API.Persistence.Contexts
             
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlite("Data Source=forum.db");
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
             builder.Entity<Board>().ToTable("Boards");
+            
             builder.Entity<Board>().HasKey(p => p.Id);
-            builder.Entity<Board>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd().HasValueGenerator<InMemoryIntegerValueGenerator<int>>();
-            builder.Entity<Board>().Property(p => p.CreatedAt).IsRequired().ValueGeneratedOnAdd().ValueGeneratedOnAdd();
+            builder.Entity<Board>().Property(p => p.CreatedAt).HasDefaultValue(DateTime.Now);
             builder.Entity<Board>().Property(p => p.Name).IsRequired().HasMaxLength(30);
             builder.Entity<Board>().Property(p => p.Description).HasMaxLength(500);
 
-            builder.Entity<Board>().HasData
-            (
-                new Board { Id = 100, Name = "Staff", Description = "This is a board for internal discussion." }, // Id set manually due to in-memory provider
-                new Board { Id = 101, Name = "Suggestions", Description = "For user suggestions."},
-                new Board { Id = 102, Name = "Funny" }
-            );
+            builder.Entity<Board>().HasMany(b => b.Posts).WithOne(p => p.Board);
+            builder.Entity<Board>().HasOne(b => b.Owner).WithMany(o => o.Boards);
 
             builder.Entity<Post>().ToTable("Posts");
             builder.Entity<Post>().HasKey(p => p.Id);
-            builder.Entity<Post>().HasOne(p => p.Board).WithMany(b => b.Posts).HasForeignKey(p => p.BoardId);
-            builder.Entity<Post>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd().HasValueGenerator<InMemoryIntegerValueGenerator<int>>();
-            builder.Entity<Post>().Property(p => p.CreatedAt).IsRequired().ValueGeneratedOnAdd().ValueGeneratedOnAdd();
+            builder.Entity<Post>().Property(p => p.CreatedAt).HasDefaultValue(DateTime.Now);
             builder.Entity<Post>().Property(p => p.Title).IsRequired().HasMaxLength(300);
             builder.Entity<Post>().Property(p => p.Body).HasMaxLength(2000);
-            
-            builder.Entity<Post>().HasData
-            (
-                new Post { Id = 100, Title = "Hello World", Body = "This is a test post!", BoardId = 100 },
-                new Post { Id = 101, Title = "Add auth lol", Body = "u gotta...", BoardId = 101 },
-                new Post { Id = 102, Title = "funny cat instagram", Body = "ha ha ha", BoardId = 102 }
-            );
+
+            builder.Entity<Post>().HasMany(p => p.Replies).WithOne(p => p.Post);
+            builder.Entity<Post>().HasOne(p => p.Owner).WithMany(o => o.Posts);
+
 
             builder.Entity<Reply>().ToTable("Replies");
             builder.Entity<Reply>().HasKey(r => r.Id);
-            builder.Entity<Reply>().HasOne(r => r.Post).WithMany(p => p.Replies).HasForeignKey(r => r.PostId);
-            builder.Entity<Reply>().Property(r => r.Id).IsRequired().ValueGeneratedOnAdd().HasValueGenerator<InMemoryIntegerValueGenerator<int>>();
-            builder.Entity<Reply>().Property(r => r.CreatedAt).IsRequired().ValueGeneratedOnAdd().ValueGeneratedOnAdd();
+            builder.Entity<Reply>().Property(p => p.CreatedAt).HasDefaultValue(DateTime.Now);
             builder.Entity<Reply>().Property(p => p.Body).IsRequired().HasMaxLength(2000);
 
-            builder.Entity<Reply>().HasData
-            (
-                new Reply { Id = 100, Body = "Very nice indeed.", PostId = 102 }
-            );
+            builder.Entity<Reply>().HasOne(r => r.Post).WithMany(p => p.Replies);
+            builder.Entity<Reply>().HasOne(r => r.Owner).WithMany(o => o.Replies);
         }
     }
 }

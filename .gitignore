@@ -486,3 +486,4 @@ MigrationBackup/
 .DS_Store
 
 # End of https://www.gitignore.io/api/csharp,aspnetcore,visualstudiocode
+src/Boards.API/forum.db

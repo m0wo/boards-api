@@ -7,8 +7,5 @@ namespace Boards.API.Resources
         [Required]
         [MaxLength(2000)]
         public string Body { get; set; }
-
-        [Required]
-        public int PostId { get; set; }
     }
 }

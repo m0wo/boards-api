@@ -7,10 +7,10 @@ namespace Boards.API.Domain.Services
 {
     public interface IReplyService
     {
-       Task<Reply> FindAsync(int id);
-       Task<IEnumerable<Reply>> ListAsync();
-       Task<ReplyResponse> SaveAsync(Reply reply, User user);
-       Task<ReplyResponse> UpdateAsync(int id, Reply reply, User user);
-       Task<ReplyResponse> DeleteAsync(int id, User user);
+       Task<Reply> FindAsync(int replyId);
+       Task<IEnumerable<Reply>> ListAsync(int postId);
+       Task<ReplyResponse> SaveAsync(int postId, Reply reply, User user);
+       Task<ReplyResponse> UpdateAsync(int replyId, Reply reply, User user);
+       Task<ReplyResponse> DeleteAsync(int replyId, User user);
     }
 }

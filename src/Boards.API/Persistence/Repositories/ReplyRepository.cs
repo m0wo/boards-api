@@ -18,14 +18,14 @@ namespace Boards.API.Persistence.Repositories
             await _context.Replies.AddAsync(reply);
         }
 
-        public async Task<Reply> FindByIdAsync(int id)
+        public async Task<Reply> FindByIdAsync(int replyId)
         {
-            return await _context.Replies.FindAsync(id);
+            return await _context.Replies.FindAsync(replyId);
         }
 
         public async Task<IEnumerable<Reply>> ListAsync()
         {
-            return await _context.Replies.Include(r => r.Post).ThenInclude(p => p.Board).ToListAsync();
+            return await _context.Replies.Include(r => r.Post).ToListAsync();
         }
 
         public void Remove(Reply reply)
