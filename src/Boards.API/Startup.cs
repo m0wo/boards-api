@@ -36,10 +36,7 @@ namespace Boards.API
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseInMemoryDatabase("forum-api-in-memory");
-            });
+            services.AddEntityFrameworkSqlite().AddDbContext<AppDbContext>();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IBoardRepository, BoardRepository>();
