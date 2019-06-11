@@ -44,6 +44,9 @@ namespace Boards.API.Controllers
         public async Task<IActionResult> FindAsync(int id)
         {
             var result = await _boardService.FindAsync(id);
+            if(result == null)
+                return NotFound();
+
             var resource = _mapper.Map<Board, BoardResource>(result);
             return Ok(resource);
         }
@@ -62,7 +65,7 @@ namespace Boards.API.Controllers
             var result = await _boardService.SaveAsync(board, user);
 
             if (!result.Success)
-                return BadRequest(result.Message);
+                return BadRequest(new ErrorResource(result.Message));
 
             var boardResource = _mapper.Map<Board, BoardResource>(result.Board);
             return Ok(boardResource);
@@ -81,7 +84,7 @@ namespace Boards.API.Controllers
             var result = await _boardService.UpdateAsync(id, board, user);
 
             if (!result.Success)
-                return BadRequest(result.Message);
+                return BadRequest(new ErrorResource(result.Message));
 
             var boardResource = _mapper.Map<Board, BoardResource>(result.Board);
             return Ok(boardResource);
@@ -96,10 +99,10 @@ namespace Boards.API.Controllers
             var result = await _boardService.DeleteAsync(id, user);
 
              if (!result.Success)
-                return BadRequest(result.Message);
+                return BadRequest(new ErrorResource(result.Message));
 
             var boardResource = _mapper.Map<Board, BoardResource>(result.Board);
-            return Ok(boardResource);
+            return Ok();
         }
     }
 }

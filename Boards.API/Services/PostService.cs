@@ -79,7 +79,7 @@ namespace Boards.API.Services
             if (existingPost == null)
                 return new PostResponse("Post not found");
 
-            if(!user.IsItemEditable(post))
+            if(!user.IsItemEditable(existingPost))
                 return new PostResponse("Invalid permissions");
 
             existingPost.Title = post.Title;

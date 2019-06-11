@@ -30,7 +30,7 @@ namespace Boards.API.Controllers
             
             var response = await _userService.CreateUserAsync(user);
             if(!response.Success)
-                return BadRequest(response.Message);
+                return BadRequest(new ErrorResource(response.Message));
 
             var userResource = _mapper.Map<User, UserResource>(response.User);
             return Ok(userResource);

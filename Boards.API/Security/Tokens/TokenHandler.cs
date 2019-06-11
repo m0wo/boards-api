@@ -13,15 +13,17 @@ namespace Boards.API.Security.Tokens
 {
     public class TokenHandler : ITokenHandler
     {
+        //TODO: Switch in-memory storage of refresh tokens to a db table or redis or something 🤔🤔🤔
+        //(Must be encrypted when storing.)
         private readonly ISet<RefreshToken> _refreshTokens = new HashSet<RefreshToken>();
 
         private readonly TokenOptions _tokenOptions;
         private readonly SigningConfigurations _signingConfigurations;
-        private readonly IPasswordHasher _passwordHaser;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public TokenHandler(IOptions<TokenOptions> tokenOptionsSnapshot, SigningConfigurations signingConfigurations, IPasswordHasher passwordHaser)
+        public TokenHandler(IOptions<TokenOptions> tokenOptionsSnapshot, SigningConfigurations signingConfigurations, IPasswordHasher passwordHasher)
         {
-            _passwordHaser = passwordHaser;
+            _passwordHasher = passwordHasher;
             _tokenOptions = tokenOptionsSnapshot.Value;
             _signingConfigurations = signingConfigurations;
         }
@@ -56,7 +58,7 @@ namespace Boards.API.Security.Tokens
         {
             var refreshToken = new RefreshToken
             (
-                token : _passwordHaser.HashPassword(Guid.NewGuid().ToString()),
+                token : _passwordHasher.HashPassword(Guid.NewGuid().ToString()),
                 expiration : DateTime.UtcNow.AddSeconds(_tokenOptions.RefreshTokenExpiration).Ticks
             );
 

@@ -25,7 +25,7 @@ namespace Boards.API.Persistence.Repositories
 
         public async Task<IEnumerable<Reply>> ListAsync()
         {
-            return await _context.Replies.Include(r => r.Post).ToListAsync();
+            return await _context.Replies.ToListAsync();
         }
 
         public void Remove(Reply reply)

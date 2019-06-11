@@ -75,9 +75,7 @@ namespace Boards.API
                     };
                 });
 
-            //TODO: switch deprecated call to updated way.
-            services.AddAutoMapper();
-
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

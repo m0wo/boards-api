@@ -77,7 +77,7 @@ namespace Boards.API.Services
             if(existingReply == null)
                 return new ReplyResponse("Reply not found");
             
-            if(!user.IsItemEditable(reply))
+            if(!user.IsItemEditable(existingReply))
                 return new ReplyResponse("Invalid permissions");
 
             existingReply.Body = reply.Body;

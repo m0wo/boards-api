@@ -55,7 +55,7 @@ namespace Boards.API.Controllers
             var result = await _replyService.SaveAsync(postId, reply, user);
 
             if (!result.Success)
-                return BadRequest(result.Message);
+                return BadRequest(new ErrorResource(result.Message));
             
             var replyResource = _mapper.Map<Reply, ReplyResource>(result.Reply);
             return Ok(replyResource);
@@ -75,7 +75,7 @@ namespace Boards.API.Controllers
             var result = await _replyService.UpdateAsync(replyId, reply, user);
 
             if (!result.Success)
-                return BadRequest(result.Message);
+                return BadRequest(new ErrorResource(result.Message));
 
             var replyResource = _mapper.Map<Reply, ReplyResource>(result.Reply);
             return Ok(replyResource);
@@ -91,7 +91,7 @@ namespace Boards.API.Controllers
             var result = await _replyService.DeleteAsync(replyId, user);
 
             if (!result.Success)
-                return BadRequest(result.Message);
+                return BadRequest(new ErrorResource(result.Message));
             
             var replyResource = _mapper.Map<Reply, ReplyResource>(result.Reply);
             return Ok(replyResource);

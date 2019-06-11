@@ -27,8 +27,10 @@ namespace Boards.API.Controllers
                 return BadRequest(ModelState.GetErrorMessages());
 
             var response = await _authenticationService.CreateAccessTokenAsync(userCredentials.Email, userCredentials.Password);
+            if(!response.Success && response.Message.Equals("Invalid Credentials"))
+                return Unauthorized(new ErrorResource(response.Message));
             if(!response.Success)
-                return BadRequest(response.Message);
+                return BadRequest(new ErrorResource(response.Message));
 
             var accessTokenResource = _mapper.Map<AccessToken, AccessTokenResource>(response.Token);
             return Ok(accessTokenResource);
@@ -43,7 +45,7 @@ namespace Boards.API.Controllers
 
             var response = await _authenticationService.RefreshTokenAsync(refreshTokenResource.Token, refreshTokenResource.UserEmail);
             if(!response.Success)
-                return BadRequest(response.Message);
+                return BadRequest(new ErrorResource(response.Message));
            
             var tokenResource = _mapper.Map<AccessToken, AccessTokenResource>(response.Token);
             return Ok(tokenResource);

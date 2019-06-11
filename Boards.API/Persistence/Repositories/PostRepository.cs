@@ -25,7 +25,7 @@ namespace Boards.API.Persistence.Repositories
 
         public async Task<IEnumerable<Post>> ListAsync()
         {
-            return await _context.Posts.Include(p => p.Board).ToListAsync();
+            return await _context.Posts.ToListAsync();
         }
 
         public void Remove(Post post)
