@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/Boards.API/bin/Debug/netcoreapp2.2/Boards.API.dll",
+            "program": "${workspaceFolder}/Boards.API/bin/Debug/netcoreapp2.2/Boards.API.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/Boards.API",
+            "cwd": "${workspaceFolder}/Boards.API",
             "stopAtEntry": false,
             "launchBrowser": {
                 "enabled": true

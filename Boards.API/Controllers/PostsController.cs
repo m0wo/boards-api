@@ -5,6 +5,7 @@ using Boards.API.Domain.Models;
 using Boards.API.Domain.Services;
 using Boards.API.Extensions;
 using Boards.API.Resources;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Boards.API.Controllers
@@ -45,6 +46,7 @@ namespace Boards.API.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("/api/boards/{boardId:int}/posts")]
         public async Task<IActionResult> PostAsync([FromRoute] int boardId, [FromBody] SavePostResource resource)
         {
@@ -65,6 +67,7 @@ namespace Boards.API.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         [Route("/api/posts/{postId:int}")]
         public async Task<IActionResult> PutAsync([FromRoute] int boardId, [FromRoute] int postId, [FromBody] SavePostResource resource)
         {
@@ -85,6 +88,7 @@ namespace Boards.API.Controllers
         }
 
         [HttpDelete]
+        [Authorize]
         [Route("/api/posts/{postId:int}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] int boardId, [FromRoute] int postId)
         {

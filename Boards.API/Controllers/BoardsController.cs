@@ -59,6 +59,7 @@ namespace Boards.API.Controllers
                 return BadRequest(ModelState.GetErrorMessages());
 
             var email = HttpContext.User.Identity.Name;
+
             var board = _mapper.Map<SaveBoardResource, Board>(resource);
 
             var user = await _userService.FindByEmailAsync(email);
@@ -72,6 +73,7 @@ namespace Boards.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutAsync(int id, [FromBody] SaveBoardResource resource)
         {
             if (!ModelState.IsValid)
@@ -91,6 +93,7 @@ namespace Boards.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             var email = HttpContext.User.Identity.Name;
