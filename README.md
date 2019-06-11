@@ -6,11 +6,10 @@ A Reddit style forum engine written with .NET Core.
 
 ## Quick Setup
 
-### 0. Clone the repo
-
 ```bash
 git clone https://github.com/m0wo/boards-api.git
-cd boards-api/
+cd boards-api/Boards.API
+dotnet run
 ```
 
 ## Project Details
@@ -23,7 +22,8 @@ The aim of the project is to develop a forum system which I can extend and add n
 
 Elements of domain-driven design are used for the project architecture. For instance, a service layer is used, alongside repositories and a unit of work. Within the API controllers, resource objects are used with AutoMapper for data transfer.
 
-### Tooling Used
+### Tooling Used
+
 - **.NET Core 2.2**
 - **EF Core**
 - **AutoMapper**
@@ -33,18 +33,18 @@ Elements of domain-driven design are used for the project architecture. For inst
 
 The API uses JWT for account management. Any requests to secured routes *must* be made with a Bearer token in the authorization header.
 
-## API Usage
+### API Usage
 
 A list of endpoints for the API can be found [here](ENDPOINTS.md).
 
-## Folder Structure
+### Folder Structure
 
 ```
 boards-api/
     Boards.API/
         Controllers/                # Controller classes
         Domain/                     # Domain area
-                Models/             # Domain models (POCO)
+                Models/             # Domain models
                 Repositories/       # Repository interfaces
                 Security/           # Security interfaces/domain models
                 Services/           # Service interfaces

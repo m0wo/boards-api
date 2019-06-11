@@ -1,6 +1,7 @@
 # Users
 
 **Create User**
+
 | URL              | /api/users                                                            |
 |------------------|-----------------------------------------------------------------------|
 | Method           | `POST`                                                                |
@@ -11,6 +12,7 @@
 | Error Response   | **Code:** `400` **Content:** `{"error":"Email already in use."}`                  |
 
 **Login**
+
 | URL              | /api/login                                                            |
 |------------------|-----------------------------------------------------------------------|
 | Method           | `POST`                                                                |
@@ -23,6 +25,7 @@
 # Boards
 
 **List Boards**
+
 | URL              | /api/boards                                                           |
 |------------------|-----------------------------------------------------------------------|
 | Method           | `GET`                                                                |
@@ -33,6 +36,7 @@
 | Error Response   | **Code:** `500` **Content:** `{"error":"Server Error"}` 
 
 **Retrieve Board**
+
 | URL              | /api/boards/:board_id                                                       |
 |------------------|-----------------------------------------------------------------------|
 | Method           | `GET`                                                                |
@@ -43,6 +47,7 @@
 | Error Response   | **Code:** `404`              |
 
 **Create Board**
+
 | URL              | /api/boards                                                            |
 |------------------|-----------------------------------------------------------------------|
 | Method           | `POST`                                                                |
@@ -53,6 +58,7 @@
 | Error Response   | **Code:** `401` **Content:** `{"error":"Invalid Permissions"}`            |
 
 **Delete Board**
+
 | URL              | /api/boards/:board_id                                                           |
 |------------------|-----------------------------------------------------------------------|
 | Method           | `DELETE`                                                                |
@@ -63,6 +69,7 @@
 | Error Response   | **Code:** `404` **Content:** `{"error":"Board not found"}`, **Code:** `401` **Content:** `{"error":"Invalid Permissions"}`|
 
 **Update Board**
+
 | URL              | /api/boards/:board_id                                                           |
 |------------------|-----------------------------------------------------------------------|
 | Method           | `PUT`                                                                |
@@ -75,6 +82,7 @@
 # Posts
 
 **List Posts For Board**
+
 | URL              | /api/boards/:board_id/posts                                                           |
 |------------------|-----------------------------------------------------------------------|
 | Method           | `GET`                                                                |
@@ -85,6 +93,7 @@
 | Error Response   |    **Code:** `500` **Content:** `{"error":"Server Error"}`                 |
 
 **Retrieve Post**
+
 | URL              | /api/posts/:post_id                                                          |
 |------------------|-----------------------------------------------------------------------|
 | Method           | `GET`                                                                |
@@ -95,6 +104,7 @@
 | Error Response   | **Code:** `500` **Content:** `{"error":"Server Error"}`                 |
 
 **Create Post**
+
 | URL              | /api/boards/:board_id/posts                                           |
 |------------------|-----------------------------------------------------------------------|
 | Method           | `POST`                                                                 |
@@ -105,6 +115,7 @@
 | Error Response   | **Code:** `500` **Content:** `{"error":"Server Error"}`                 |
 
 **Delete Post**
+
 | URL              | /api/posts/:post_id                                           |
 |------------------|-----------------------------------------------------------------------|
 | Method           | `DELETE`                                                                 |
@@ -115,6 +126,7 @@
 | Error Response   | **Code:** `404` **Content:** `{"error":"Post not found"}`, **Code:** `401` **Content:** `{"error":"Invalid Permissions"}`|
 
 **Update Post**
+
 | URL              | /api/posts/:post_id                                           |
 |------------------|-----------------------------------------------------------------------|
 | Method           | `PUT`                                                                 |
@@ -128,6 +140,7 @@
 # Replies
 
 **List Replies For Post**
+
 | URL              | /api/posts/:post_id/replies                                           |
 |------------------|-----------------------------------------------------------------------|
 | Method           | `GET`                                                                 |
@@ -138,6 +151,7 @@
 | Error Response   | **Code:** `500` **Content:** `{"error":"Server Error"}`                 |
 
 **Retrieve Reply**
+
 | URL              | /api/replies/:reply_id                                           |
 |------------------|-----------------------------------------------------------------------|
 | Method           | `GET`                                                                 |
@@ -148,6 +162,7 @@
 | Error Response   | **Code:** `500` **Content:** `{"error":"Server Error"}`                 |
 
 **Create Reply**
+
 | URL              | /api/posts/:post_id/replies                                           |
 |------------------|-----------------------------------------------------------------------|
 | Method           | `POST`                                                                 |
@@ -158,6 +173,7 @@
 | Error Response   | **Code:** `500` **Content:** `{"error":"Server Error"}`                 |
 
 **Delete Reply**
+
 | URL              | /api/replies/:reply_id                                           |
 |------------------|-----------------------------------------------------------------------|
 | Method           | `DELETE`                                                                 |
@@ -168,6 +184,7 @@
 | Error Response   | **Code:** `500` **Content:** `{"error":"Server Error"}`                 |
 
 **Update Reply**
+
 | URL              | /api/replies/:reply_id                                           |
 |------------------|-----------------------------------------------------------------------|
 | Method           | `PUT`                                                                 |
