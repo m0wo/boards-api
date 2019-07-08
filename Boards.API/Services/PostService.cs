@@ -12,11 +12,11 @@ namespace Boards.API.Services
 {
     public class PostService : IPostService
     {
-        private readonly IPostRepository _postRepository;
-        private readonly IBoardRepository _boardRepository;
+        private readonly IRepository<Post> _postRepository;
+        private readonly IRepository<Board> _boardRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public PostService(IBoardRepository boardRepository, IPostRepository postRepository, IUnitOfWork unitOfWork)
+        public PostService(IRepository<Board> boardRepository, IRepository<Post> postRepository, IUnitOfWork unitOfWork)
         {
             _boardRepository = boardRepository;
             _postRepository = postRepository;

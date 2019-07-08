@@ -12,10 +12,10 @@ namespace Boards.API.Services
 {
     public class ReplyService : IReplyService
     {
-        private readonly IReplyRepository _replyRepository;
+        private readonly IRepository<Reply> _replyRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public ReplyService(IReplyRepository replyRepository, IUnitOfWork unitOfWork)
+        public ReplyService(IRepository<Reply> replyRepository, IUnitOfWork unitOfWork)
         {
             _replyRepository = replyRepository;
             _unitOfWork = unitOfWork;

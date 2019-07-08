@@ -39,9 +39,7 @@ namespace Boards.API
             services.AddEntityFrameworkSqlite().AddDbContext<AppDbContext>();
 
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IBoardRepository, BoardRepository>();
-            services.AddScoped<IPostRepository, PostRepository>();
-            services.AddScoped<IReplyRepository, ReplyRepository>();
+            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddSingleton<IPasswordHasher, PasswordHasher>();

@@ -11,10 +11,10 @@ namespace Boards.API.Services
 {
     public class BoardService : IBoardService
     {
-        private readonly IBoardRepository _boardRepository;
+        private readonly IRepository<Board> _boardRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public BoardService(IBoardRepository boardRepository, IUnitOfWork unitOfWork)
+        public BoardService(IRepository<Board> boardRepository, IUnitOfWork unitOfWork)
         {
            _boardRepository = boardRepository;
            _unitOfWork = unitOfWork; 
